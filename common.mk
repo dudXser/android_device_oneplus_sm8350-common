@@ -250,11 +250,11 @@ PRODUCT_PACKAGES += \
 
 # Lineage Health
 #PRODUCT_PACKAGES += \
-    vendor.aosp.health-service.default
+    vendor.lineage.health-service.default
 
 # LiveDisplay
 #PRODUCT_PACKAGES += \
-    vendor.aosp.livedisplay@2.1-service.oplus
+    vendor.lineage.livedisplay@2.1-service.oplus
 
 # Media
 PRODUCT_COPY_FILES += \
@@ -293,7 +293,7 @@ PRODUCT_PACKAGES += \
 $(call inherit-product, hardware/oplus/overlay/qssi/qssi.mk)
 
 DEVICE_PACKAGE_OVERLAYS += \
-    $(LOCAL_PATH)/overlay-aosp
+    $(LOCAL_PATH)/overlay-lineage
 
 PRODUCT_ENFORCE_RRO_TARGETS := *
 PRODUCT_PACKAGES += \
@@ -404,7 +404,7 @@ PRODUCT_PACKAGES += \
 
 # Touch
 #PRODUCT_PACKAGES += \
-    vendor.aosp.touch@1.0-service.oplus
+    vendor.lineage.touch@1.0-service.oplus
 
 # Update engine
 PRODUCT_PACKAGES += \
