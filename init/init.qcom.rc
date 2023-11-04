@@ -411,10 +411,10 @@ on property:ro.vendor.iocgrp.config=1
     mount cgroup none /dev/blkio blkio
     chown system system /dev/blkio
     chown system system /dev/blkio/tasks
-    chmod 0664 /dev/blkio/tasks
+    chmod 0755 /dev/blkio/tasks
     mkdir /dev/blkio/bg 0755 system system
     chown system system /dev/blkio/bg/tasks
-    chmod 0664 /dev/blkio/bg/tasks
+    chmod 0755 /dev/blkio/bg/tasks
     write /dev/blkio/blkio.weight 1000
     write /dev/blkio/bg/blkio.weight 100
 
@@ -891,3 +891,61 @@ service vendor.audio-hal /vendor/bin/hw/android.hardware.audio.service
     ioprio rt 4
     writepid /dev/cpuset/foreground/tasks /dev/stune/foreground/tasks
     onrestart restart audioserver
+
+on post-fs-data
+    chmod 0666 /mnt/vendor/persist/wlan/WCNSS_qcom_cfg.ini
+
+# To rename ini_temp.txt into WCNSS_qcom_cfg.ini
+on property:oppo.wifi.iniromupdate=*
+    copy /mnt/vendor/persist/ini_temp.txt /mnt/vendor/persist/wlan/WCNSS_qcom_cfg.ini
+    chmod 0666 /mnt/vendor/persist/wlan/WCNSS_qcom_cfg.ini
+
+# To enable /mnt/vendor/persist folder access right for ini romupdate feature
+on property:oppo.wifi.enablepersistaccess=*
+    chmod 0777 /mnt/vendor/persist
+
+# To restore /mnt/vendor/persist folder access right for ini romupdate feature
+on property:oppo.wifi.restorepersistaccess=*
+    chmod 0771 /mnt/vendor/persist
+#endif /* OPLUS_BUG_STABLITY */
+
+service vendor.contexthub-hal-1-0 /vendor/bin/hw/android.hardware.contexthub@1.0-service
+    override
+    class hal
+    interface android.hardware.contexthub@1.0::IContexthub default
+    user system
+    group system
+    disabled
+
+#ifdef OPLUS_FEATURE_DUMP_NETCFG
+#SuPei@CONNECTIVITY.WIFI.NETWORK.100259, 2020/09/20, add for dumping qcom netcfg
+on property:persist.sys.assert.panic=true
+    stop oplus_dump_netcfg
+
+on property:persist.sys.assert.panic=false
+    start oplus_dump_netcfg
+
+service oplus_dump_netcfg /system_ext/bin/oplus_dump_netcfg
+    class main
+    user shell
+    group system net_raw net_admin readproc input inet
+    capabilities NET_ADMIN NET_RAW
+    oneshot
+#endif  /* OPLUS_FEATURE_DUMP_NETCFG */
+
+#ifdef OPLUS_FEATURE_WIFI_FTM
+#Tao.Hui@CONNECTIVITY.WIFI.BASIC.HARDWARE.1065227, 2020/08/31
+#Add for : Wifi BDF version
+service WifibdfVersion /odm/bin/vendor.autochmod.sh "WifibdfVersion"
+    class late_start
+    user root
+    group root
+    oneshot
+#endif /* VENDOR_EDIT */
+
+#ifdef/* VENDOR_EDIT */
+on property:sys.boot_completed=1
+    copy /vendor/etc/OnePlus_QC_LTM_Commercial_SM8350_2021_01_19.pfm /mnt/vendor/persist/data/pfm/licenses/OnePlus_QC_LTM_Commercial_SM8350_2021_01_19.pfm
+    chmod 0600 /mnt/vendor/persist/data/pfm/licenses/OnePlus_QC_LTM_Commercial_SM8350_2021_01_19.pfm
+    chown system system /mnt/vendor/persist/data/pfm/licenses/OnePlus_QC_LTM_Commercial_SM8350_2021_01_19.pfm
+#endif /* VENDOR_EDIT */

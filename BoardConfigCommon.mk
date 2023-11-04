@@ -91,6 +91,10 @@ TARGET_INIT_VENDOR_LIB := //$(COMMON_PATH):libinit_oplus
 BOARD_BOOT_HEADER_VERSION := 3
 BOARD_KERNEL_BASE := 0x00000000
 BOARD_KERNEL_CMDLINE := \
+    kpti=off \
+    video=vfb:640x400,bpp=32,memsize=3072000 \
+    androidboot.console=ttyMSM0 \
+    console=ttyMSM0,115200n8 \
     androidboot.hardware=qcom \
     androidboot.memcg=1 \
     androidboot.usbcontroller=a600000.dwc3 \
@@ -131,6 +135,7 @@ BOARD_USES_METADATA_PARTITION := true
 
 # Partitions
 BOARD_BOOTIMAGE_PARTITION_SIZE := 201326592
+BOARD_USES_RECOVERY_AS_BOOT := false
 BOARD_DTBOIMG_PARTITION_SIZE := 25165824
 BOARD_USERDATAIMAGE_PARTITION_SIZE := 237598617600
 BOARD_VENDOR_BOOTIMAGE_PARTITION_SIZE := 201326592
